@@ -4,6 +4,7 @@ import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { VStack } from "@chakra-ui/layout";
 import { useToast } from "@chakra-ui/toast";
 import axios from "axios";
+import { Container, HStack, Box, Image, Text } from "@chakra-ui/react";
 import { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
@@ -23,7 +24,7 @@ const Signup = () => {
   const [pic, setPic] = useState();
   const [otpIcon, setOtpIcon] = useState(null);
   const [picLoading, setPicLoading] = useState(false);
-  const [countdown, setCountdown] = useState(60);
+  const [countdown, setCountdown] = useState(120);
   const timerIdRef = useRef(null);
 
   const startCountdown = () => {
@@ -122,6 +123,7 @@ const Signup = () => {
         },
         config
       );
+      setCountdown("120");
       toast({
         title: "Registration Successful",
         status: "success",
@@ -131,7 +133,7 @@ const Signup = () => {
       });
       localStorage.setItem("userInfo", JSON.stringify(data));
       setPicLoading(false);
-      history.push("/");
+      history.push("/login");
     } catch (error) {
       toast({
         title: "Error Occured!",
@@ -262,109 +264,153 @@ const Signup = () => {
       setOtpIcon(null);
     }
   }, [otp || sentOtp]);
-
+  const gotoLogin = () => {
+    history.push("/login");
+  };
   return (
-    <VStack spacing="5px">
-      <FormControl id="first-name" isRequired>
-        <FormLabel>Name</FormLabel>
-        <Input
-          placeholder="Enter Your Name"
-          onChange={(e) => setName(e.target.value)}
-        />
-      </FormControl>
-      <FormControl id="email" isRequired>
-        <FormLabel>Email Address</FormLabel>
-        <InputGroup size="md">
-          <Input
-            type="email"
-            placeholder="Enter Your Email Address"
-            onChange={(e) => setEmail(e.target.value)}
-            isDisabled={countdown < 60}
-          />
-          <InputRightElement width="5.5rem">
-            <Button
-              h="1.75rem"
-              size="sm"
-              mr="0.5rem"
-              onClick={handleSendOtp}
-              isLoading={emailLoading}
-              isDisabled={countdown < 60}
-            >
-              {countdown < 60 ? `Resend OTP in ${countdown}s` : "Send OTP"}
-            </Button>
-          </InputRightElement>
-        </InputGroup>
-      </FormControl>
-      <FormControl id="otp" isRequired>
-        <FormLabel>Enter OTP</FormLabel>
-        <InputGroup size="md">
-          <Input
-            type={"text"}
-            placeholder="Enter the OTP"
-            onChange={(e) => setOtp(e.target.value)}
-          />
-          {otpIcon !== null && (
-            <InputRightElement width="4.5rem">
-              <Button
-                h="1.75rem"
-                size="sm"
-                color={otp === sentOtp ? "green" : "red"}
-              >
-                {otpIcon}
-              </Button>
-            </InputRightElement>
-          )}
-        </InputGroup>
-      </FormControl>
-      <FormControl id="password" isRequired>
-        <FormLabel>Password</FormLabel>
-        <InputGroup size="md">
-          <Input
-            type={show ? "text" : "password"}
-            placeholder="Enter Password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <InputRightElement width="4.5rem">
-            <Button h="1.75rem" size="sm" onClick={handleClick}>
-              {show ? "Hide" : "Show"}
-            </Button>
-          </InputRightElement>
-        </InputGroup>
-      </FormControl>
-      <FormControl id="password" isRequired>
-        <FormLabel>Confirm Password</FormLabel>
-        <InputGroup size="md">
-          <Input
-            type={show ? "text" : "password"}
-            placeholder="Confirm password"
-            onChange={(e) => setConfirmpassword(e.target.value)}
-          />
-          <InputRightElement width="4.5rem">
-            <Button h="1.75rem" size="sm" onClick={handleClick}>
-              {show ? "Hide" : "Show"}
-            </Button>
-          </InputRightElement>
-        </InputGroup>
-      </FormControl>
-      <FormControl id="pic">
-        <FormLabel>Upload your Picture</FormLabel>
-        <Input
-          type="file"
-          p={1.5}
-          accept="image/*"
-          onChange={(e) => postDetails(e.target.files[0])}
-        />
-      </FormControl>
-      <Button
-        colorScheme="blue"
-        width="100%"
-        style={{ marginTop: 15 }}
-        onClick={submitHandler}
-        isLoading={picLoading}
+    <Container maxW="xl" centerContent>
+      <Box
+        d="flex"
+        justifyContent="center"
+        p={3}
+        bg="white"
+        w="100%"
+        m="40px 0 15px 0"
+        borderRadius="lg"
+        borderWidth="1px"
       >
-        Sign Up
-      </Button>
-    </VStack>
+        <HStack spacing="2">
+          <Image src="Favicon.png" alt="LiveChat Logo" boxSize="50px" />
+          <Text
+            fontSize="4xl"
+            fontWeight={"extrabold"}
+            pb={3}
+            fontFamily="Work Sans"
+            color="#32ccfe"
+          >
+            ChatApp
+          </Text>
+        </HStack>
+      </Box>
+      <Box bg="white" w="100%" p={4} borderRadius="lg" borderWidth="1px">
+        <VStack spacing="5px">
+          <FormControl id="first-name" isRequired>
+            <FormLabel>Name</FormLabel>
+            <Input
+              placeholder="Enter Your Name"
+              onChange={(e) => setName(e.target.value)}
+            />
+          </FormControl>
+          <FormControl id="email" isRequired>
+            <FormLabel>Email Address</FormLabel>
+            <InputGroup size="md">
+              <Input
+                type="email"
+                placeholder="Enter Your Email Address"
+                onChange={(e) => setEmail(e.target.value)}
+                isDisabled={countdown < 60}
+              />
+              <InputRightElement width="5.5rem">
+                <Button
+                  h="1.75rem"
+                  size="sm"
+                  mr="0.5rem"
+                  onClick={handleSendOtp}
+                  isLoading={emailLoading}
+                  isDisabled={countdown < 60}
+                >
+                  {countdown < 60 ? `Resend OTP in ${countdown}s` : "Send OTP"}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
+          </FormControl>
+          <FormControl id="otp" isRequired>
+            <FormLabel>Enter OTP</FormLabel>
+            <InputGroup size="md">
+              <Input
+                type={"text"}
+                placeholder="Enter the OTP"
+                onChange={(e) => setOtp(e.target.value)}
+              />
+              {otpIcon !== null && (
+                <InputRightElement width="4.5rem">
+                  <Button
+                    h="1.75rem"
+                    size="sm"
+                    color={otp === sentOtp ? "green" : "red"}
+                  >
+                    {otpIcon}
+                  </Button>
+                </InputRightElement>
+              )}
+            </InputGroup>
+          </FormControl>
+          <FormControl id="password" isRequired>
+            <FormLabel>Password</FormLabel>
+            <InputGroup size="md">
+              <Input
+                type={show ? "text" : "password"}
+                placeholder="Enter Password"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <InputRightElement width="4.5rem">
+                <Button h="1.75rem" size="sm" onClick={handleClick}>
+                  {show ? "Hide" : "Show"}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
+          </FormControl>
+          <FormControl id="password" isRequired>
+            <FormLabel>Confirm Password</FormLabel>
+            <InputGroup size="md">
+              <Input
+                type={show ? "text" : "password"}
+                placeholder="Confirm password"
+                onChange={(e) => setConfirmpassword(e.target.value)}
+              />
+              <InputRightElement width="4.5rem">
+                <Button h="1.75rem" size="sm" onClick={handleClick}>
+                  {show ? "Hide" : "Show"}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
+          </FormControl>
+          <FormControl id="pic">
+            <FormLabel>Upload your Picture</FormLabel>
+            <Input
+              type="file"
+              p={1.5}
+              accept="image/*"
+              onChange={(e) => postDetails(e.target.files[0])}
+            />
+          </FormControl>
+          <Button
+            colorScheme="blue"
+            width="100%"
+            style={{ marginTop: 15 }}
+            onClick={submitHandler}
+            isLoading={picLoading}
+          >
+            Sign Up
+          </Button>
+        </VStack>
+        <Text textAlign={"center"}>
+          You have Already Registered?{" "}
+          <span
+            style={{
+              color: "#32ccfe",
+              cursor: "pointer",
+              textDecorationLine: "underline",
+            }}
+            onClick={() => {
+              gotoLogin();
+            }}
+          >
+            Login
+          </span>
+        </Text>
+      </Box>
+    </Container>
   );
 };
 

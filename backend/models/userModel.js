@@ -26,6 +26,11 @@ const userSchema = mongoose.Schema(
       type: Date,
       required: false,
     },
+    isLogin: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
   },
   { timestaps: true }
 );

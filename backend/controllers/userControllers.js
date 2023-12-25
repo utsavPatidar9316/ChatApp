@@ -1,6 +1,8 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const generateToken = require("../config/generateToken");
+const { Types } = require("mongoose");
+const ObjectId = Types.ObjectId;
 
 //@description     Get or Search all users
 //@route           GET /api/user?search=
@@ -67,12 +69,18 @@ const authUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
 
   if (user && (await user.matchPassword(password))) {
+    const UserData = await User.findByIdAndUpdate(
+      { _id: new ObjectId(user._id) },
+      { isLogin: user.isLogin + 1 },
+      { new: true } // Pass options as an object
+    );
     res.json({
       _id: user._id,
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
       pic: user.pic,
+      isLogin: UserData.isLogin,
       token: generateToken(user._id),
     });
   } else {
@@ -103,6 +111,7 @@ const updateUser = asyncHandler(async (req, resp) => {
 
 const lastSeen = async (id, isActive) => {
   try {
+    if (id === "123") return;
     if (isActive) {
       await User.findByIdAndUpdate(id, { isActive: true });
     } else {

@@ -9,11 +9,20 @@ import GroupChatModal from "./miscellaneous/GroupChatModal";
 import { Avatar } from "@chakra-ui/avatar";
 import { Button } from "@chakra-ui/react";
 import { ChatState } from "../Context/ChatProvider";
+import { ampmTime } from "../config/ChatLogics";
 
 const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState();
 
-  const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
+  const {
+    selectedChat,
+    setSelectedChat,
+    user,
+    chats,
+    setChats,
+    notification,
+    setNotification,
+  } = ChatState();
 
   const toast = useToast();
 
@@ -38,13 +47,22 @@ const MyChats = ({ fetchAgain }) => {
       });
     }
   };
-  console.log(selectedChat, "selected");
-  console.log(chats, "chat");
   useEffect(() => {
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
     fetchChats();
     // eslint-disable-next-line
   }, [fetchAgain]);
+  const selectChatFunc = (chat) => {
+    setSelectedChat(chat);
+    setNotification((prevNotifications) => {
+      const updatedNotifications = prevNotifications.filter(
+        (notificationChat) =>
+          notificationChat.sender._id !== chat.latestMessage.sender._id
+      );
+
+      return updatedNotifications;
+    });
+  };
   return (
     <Box
       d={{ base: selectedChat ? "none" : "flex", md: "flex" }}
@@ -72,6 +90,7 @@ const MyChats = ({ fetchAgain }) => {
             d="flex"
             fontSize={{ base: "17px", md: "10px", lg: "17px" }}
             rightIcon={<AddIcon />}
+            id="newGroupChat"
           >
             New Group Chat
           </Button>
@@ -87,51 +106,104 @@ const MyChats = ({ fetchAgain }) => {
         borderRadius="lg"
         overflowY="hidden"
       >
-        {chats ? (
+        {chats?.length > 0 ? (
           <Stack overflowY="scroll">
             {chats.map((chat) => (
               <Box
-                onClick={() => setSelectedChat(chat)}
+                onClick={() => selectChatFunc(chat)}
                 cursor="pointer"
-                bg={selectedChat?._id === chat?._id ? "#38B2AC" : "#E8E8E8"}
-                color={selectedChat?._id === chat?._id ? "white" : "black"}
+                bg={selectedChat?._id === chat?._id ? "#b4b4b4" : "#E8E8E8"}
+                color={"black"}
                 px={3}
                 py={2}
                 borderRadius="lg"
                 key={chat._id}
               >
-                <Box display="flex" alignItems="center">
-                  <Avatar
-                    mt="7px"
-                    mr={1}
-                    size="sm"
-                    cursor="pointer"
-                    name={
-                      !chat.isGroupChat
-                        ? getSender(loggedUser, chat.users)
-                        : chat.chatName
-                    }
-                    src={
-                      !chat.isGroupChat
-                        ? getSenderImage(loggedUser, chat.users)
-                        : chat.chatName
-                    }
-                  />
-                  <Box>
-                    <Text>
-                      {!chat.isGroupChat
-                        ? getSender(loggedUser, chat.users)
-                        : chat.chatName}
-                    </Text>
-                    {chat.latestMessage && (
-                      <Text fontSize="xs">
-                        <b>{chat.latestMessage.sender.name} : </b>
-                        {chat.latestMessage.content.length > 50
-                          ? chat.latestMessage.content.substring(0, 51) + "..."
-                          : chat.latestMessage.content}
+                <Box display="flex" justifyContent="space-between">
+                  <Box display="flex" alignItems="center">
+                    <Avatar
+                      mt="7px"
+                      mr={1}
+                      size="sm"
+                      cursor="pointer"
+                      name={
+                        !chat.isGroupChat
+                          ? getSender(loggedUser, chat.users)
+                          : chat.chatName
+                      }
+                      src={
+                        !chat.isGroupChat
+                          ? getSenderImage(loggedUser, chat.users)
+                          : chat.chatName
+                      }
+                    />
+                    <Box>
+                      <Text>
+                        {!chat.isGroupChat
+                          ? getSender(loggedUser, chat.users)
+                          : chat.chatName}
                       </Text>
-                    )}
+                      {chat.latestMessage && (
+                        <Text fontSize="xs">
+                          <b>{chat.latestMessage.sender.name} : </b>
+                          {chat.latestMessage.content.length > 50
+                            ? chat.latestMessage.content.substring(0, 51) +
+                              "..."
+                            : chat.latestMessage.content}
+                        </Text>
+                      )}
+                    </Box>
                   </Box>
+                  {!notification?.isGroupChat && notification?.length > 0 && (
+                    <Box style={{ textAlign: "center" }}>
+                      <>
+                        {notification.filter(
+                          (notif) =>
+                            notif.sender?._id ===
+                            chat?.latestMessage?.sender?._id
+                        ).length > 0 && (
+                          <>
+                            <Text>
+                              {ampmTime(
+                                notification
+                                  .filter(
+                                    (notif) =>
+                                      notif.sender?._id ===
+                                      chat?.latestMessage?.sender?._id
+                                  )
+                                  .reduce(
+                                    (latestCreatedAt, notif) =>
+                                      notif.createdAt > latestCreatedAt
+                                        ? notif.createdAt
+                                        : latestCreatedAt,
+                                    ""
+                                  )
+                              )}
+                            </Text>
+                            <Text
+                              borderRadius="50%"
+                              width="25px"
+                              textAlign="center"
+                              background="gray"
+                              color="white"
+                              height="25px"
+                            >
+                              {notification
+                                .filter(
+                                  (notif) =>
+                                    notif.sender?._id ===
+                                    chat?.latestMessage?.sender?._id
+                                )
+                                .reduce(
+                                  (totalCount, notif) => totalCount + 1,
+                                  0
+                                )}
+                            </Text>
+                          </>
+                        )}
+                      </>
+                    </Box>
+                  )}
                 </Box>
               </Box>
             ))}

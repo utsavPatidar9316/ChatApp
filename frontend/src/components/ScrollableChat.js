@@ -28,19 +28,6 @@ const ScrollableChat = ({ messages }) => {
                 <>
                   <div
                     style={{
-                      position: "sticky",
-                      top: 0,
-                      zIndex: 1,
-                      color: "gray",
-                      fontSize: "10px",
-                      margin: "10px 0",
-                      textAlign: "center",
-                    }}
-                  >
-                    {getDate(m.createdAt)}
-                  </div>
-                  <div
-                    style={{
                       display: "block",
                       textAlign: "center",
                       color: "gray",

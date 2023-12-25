@@ -75,7 +75,7 @@ function SideDrawer() {
       position: "bottom",
     });
     localStorage.removeItem("userInfo");
-    history.push("/");
+    history.push("/login");
   };
 
   const handleSearch = async () => {
@@ -108,8 +108,6 @@ function SideDrawer() {
   }, [search]);
 
   const accessChat = async (userId) => {
-    console.log(userId);
-
     try {
       setLoadingChat(true);
       const config = {
@@ -148,34 +146,38 @@ function SideDrawer() {
         borderWidth="5px"
       >
         <Tooltip label="Search Users to chat" hasArrow placement="bottom-end">
-          <Button variant="ghost" onClick={onOpen}>
+          <Button variant="ghost" onClick={onOpen} id="searchUser">
             <i className="fas fa-search"></i>
             <Text d={{ base: "none", md: "flex" }} px={4}>
               Search User
             </Text>
           </Button>
         </Tooltip>
-        <HStack spacing="2">
-          <Image src="Favicon.png" alt="LiveChat Logo" boxSize="50px" />
-          <Text
-            fontSize="4xl"
-            fontWeight={"extrabold"}
-            pb={3}
-            fontFamily="Work Sans"
-            color="#32ccfe"
-          >
-            ChatApp
-          </Text>
-        </HStack>
+        <div id="chatApp">
+          <HStack spacing="2">
+            <Image src="Favicon.png" alt="LiveChat Logo" boxSize="50px" />
+            <Text
+              fontSize="4xl"
+              fontWeight={"extrabold"}
+              pb={3}
+              fontFamily="Work Sans"
+              color="#32ccfe"
+            >
+              ChatApp
+            </Text>
+          </HStack>
+        </div>
         <div>
           <Menu>
-            <MenuButton p={1}>
-              <NotificationBadge
-                count={notification.length}
-                effect={Effect.SCALE}
-              />
-              <BellIcon fontSize="2xl" m={1} />
-            </MenuButton>
+            <div id="notification" style={{ display: "inline" }}>
+              <MenuButton p={1}>
+                <NotificationBadge
+                  count={notification.length}
+                  effect={Effect.SCALE}
+                />
+                <BellIcon fontSize="2xl" m={1} />
+              </MenuButton>
+            </div>
             <MenuList pl={2}>
               {!notification.length && "No New Messages"}
               {notification.map((notif) => (
@@ -194,14 +196,20 @@ function SideDrawer() {
             </MenuList>
           </Menu>
           <Menu>
-            <MenuButton as={Button} bg="white" rightIcon={<ChevronDownIcon />}>
-              <Avatar
-                size="sm"
-                cursor="pointer"
-                name={user.name}
-                src={user.pic}
-              />
-            </MenuButton>
+            <div id="profileDrive" style={{ display: "inline" }}>
+              <MenuButton
+                as={Button}
+                bg="white"
+                rightIcon={<ChevronDownIcon />}
+              >
+                <Avatar
+                  size="sm"
+                  cursor="pointer"
+                  name={user.name}
+                  src={user.pic}
+                />
+              </MenuButton>
+            </div>
             <MenuList>
               <ProfileModal user={user}>
                 <MenuItem>My Profile</MenuItem>{" "}
