@@ -14,7 +14,6 @@ import {
 } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
 import { ChatState } from "../../Context/ChatProvider";
-import { Link } from "react";
 const Login = () => {
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);

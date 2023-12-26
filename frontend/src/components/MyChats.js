@@ -56,8 +56,7 @@ const MyChats = ({ fetchAgain }) => {
     setSelectedChat(chat);
     setNotification((prevNotifications) => {
       const updatedNotifications = prevNotifications.filter(
-        (notificationChat) =>
-          notificationChat.sender._id !== chat.latestMessage.sender._id
+        (notificationChat) => notificationChat.chat._id !== chat._id
       );
 
       return updatedNotifications;
@@ -160,7 +159,8 @@ const MyChats = ({ fetchAgain }) => {
                         {notification.filter(
                           (notif) =>
                             notif.sender?._id ===
-                            chat?.latestMessage?.sender?._id
+                              chat?.latestMessage?.sender?._id &&
+                            notif.chat?._id === chat?._id
                         ).length > 0 && (
                           <>
                             <Text>
@@ -169,7 +169,8 @@ const MyChats = ({ fetchAgain }) => {
                                   .filter(
                                     (notif) =>
                                       notif.sender?._id ===
-                                      chat?.latestMessage?.sender?._id
+                                        chat?.latestMessage?.sender?._id &&
+                                      notif.chat?._id === chat?._id
                                   )
                                   .reduce(
                                     (latestCreatedAt, notif) =>
@@ -192,7 +193,8 @@ const MyChats = ({ fetchAgain }) => {
                                 .filter(
                                   (notif) =>
                                     notif.sender?._id ===
-                                    chat?.latestMessage?.sender?._id
+                                      chat?.latestMessage?.sender?._id &&
+                                    notif.chat?._id === chat?._id
                                 )
                                 .reduce(
                                   (totalCount, notif) => totalCount + 1,

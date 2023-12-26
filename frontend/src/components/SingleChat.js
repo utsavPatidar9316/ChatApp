@@ -8,12 +8,6 @@ import {
   Spinner,
   useToast,
   useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Image,
 } from "@chakra-ui/react";
 import {
