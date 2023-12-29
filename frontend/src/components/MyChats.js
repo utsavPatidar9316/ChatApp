@@ -7,9 +7,10 @@ import { getSender, getSenderImage } from "../config/ChatLogics";
 import ChatLoading from "./ChatLoading";
 import GroupChatModal from "./miscellaneous/GroupChatModal";
 import { Avatar } from "@chakra-ui/avatar";
-import { Button } from "@chakra-ui/react";
+import { Button, color } from "@chakra-ui/react";
 import { ChatState } from "../Context/ChatProvider";
 import { ampmTime } from "../config/ChatLogics";
+import { theme } from "../../src/style";
 
 const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState();
@@ -22,6 +23,8 @@ const MyChats = ({ fetchAgain }) => {
     setChats,
     notification,
     setNotification,
+    darkmode,
+    setDarkmode,
   } = ChatState();
 
   const toast = useToast();
@@ -68,7 +71,7 @@ const MyChats = ({ fetchAgain }) => {
       flexDir="column"
       alignItems="center"
       p={3}
-      bg="white"
+      bg={darkmode ? theme.darkbackground : theme.lightbackground}
       w={{ base: "100%", md: "31%" }}
       borderRadius="lg"
       borderWidth="1px"
@@ -83,7 +86,11 @@ const MyChats = ({ fetchAgain }) => {
         justifyContent="space-between"
         alignItems="center"
       >
-        My Chats
+        <span
+          style={{ color: darkmode ? theme?.lightBorder : theme?.lightColor }}
+        >
+          My Chats
+        </span>
         <GroupChatModal>
           <Button
             d="flex"
@@ -99,11 +106,11 @@ const MyChats = ({ fetchAgain }) => {
         d="flex"
         flexDir="column"
         p={3}
-        bg="#F8F8F8"
         w="100%"
         h="100%"
         borderRadius="lg"
         overflowY="hidden"
+        bg={darkmode ? theme?.darkbackground : theme?.lightbackground}
       >
         {chats?.length > 0 ? (
           <Stack overflowY="scroll">
@@ -111,12 +118,28 @@ const MyChats = ({ fetchAgain }) => {
               <Box
                 onClick={() => selectChatFunc(chat)}
                 cursor="pointer"
-                bg={selectedChat?._id === chat?._id ? "#b4b4b4" : "#E8E8E8"}
-                color={"black"}
+                bg={
+                  selectedChat?._id === chat?._id
+                    ? "#b4b4b4"
+                    : darkmode
+                    ? "black"
+                    : "#E8E8E8"
+                }
+                color={
+                  darkmode
+                    ? selectedChat?._id === chat?._id
+                      ? "black"
+                      : theme?.darkColor
+                    : theme?.lightColor
+                }
                 px={3}
                 py={2}
                 borderRadius="lg"
                 key={chat._id}
+                _hover={{
+                  bg: theme?.darkColor,
+                  color: darkmode ? theme?.lightBorder : theme?.darkBorder,
+                }}
               >
                 <Box display="flex" justifyContent="space-between">
                   <Box display="flex" alignItems="center">

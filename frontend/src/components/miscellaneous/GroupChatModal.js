@@ -18,6 +18,7 @@ import { useState } from "react";
 import { ChatState } from "../../Context/ChatProvider";
 import UserBadgeItem from "../userAvatar/UserBadgeItem";
 import UserListItem from "../userAvatar/UserListItem";
+import { theme } from "../../style";
 
 const GroupChatModal = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -28,7 +29,7 @@ const GroupChatModal = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
 
-  const { user, chats, setChats } = ChatState();
+  const { user, chats, setChats, darkmode } = ChatState();
 
   const handleGroup = (userToAdd) => {
     if (selectedUsers.includes(userToAdd)) {
@@ -136,11 +137,21 @@ const GroupChatModal = ({ children }) => {
             fontFamily="Work sans"
             d="flex"
             justifyContent="center"
+            bg={darkmode ? theme?.darkbackground : theme?.lightbackground}
+            color={darkmode ? theme?.lightBorder : theme?.lightColor}
           >
             Create Group Chat
           </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody d="flex" flexDir="column" alignItems="center">
+          <ModalCloseButton
+            color={darkmode ? theme?.lightBorder : theme?.lightColor}
+          />
+          <ModalBody
+            d="flex"
+            flexDir="column"
+            alignItems="center"
+            bg={darkmode ? theme?.darkbackground : theme?.lightbackground}
+            color={darkmode ? theme?.lightBorder : theme?.lightColor}
+          >
             <FormControl>
               <Input
                 placeholder="Chat Name"
@@ -179,7 +190,9 @@ const GroupChatModal = ({ children }) => {
                 ))
             )}
           </ModalBody>
-          <ModalFooter>
+          <ModalFooter
+            bg={darkmode ? theme?.darkbackground : theme?.lightbackground}
+          >
             <Button onClick={handleSubmit} colorScheme="blue">
               Create Chat
             </Button>

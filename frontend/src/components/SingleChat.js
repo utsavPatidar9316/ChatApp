@@ -26,7 +26,9 @@ import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
 import { ChatState } from "../Context/ChatProvider";
 import PersonalProfileModal from "./PersonalProfile";
 import ImagePreviewModel from "./ImagePreviewModel";
-const ENDPOINT = "http://localhost:5000";
+import { theme } from "../style";
+import backgroundImage from "../whiteImage.jpg";
+import Darkbackgroundimage from "../image.jpg";
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
@@ -38,8 +40,14 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedImage, setSelectedImage] = useState(null);
   const fileInputRef = useRef(null);
-  const { selectedChat, setSelectedChat, user, notification, setNotification } =
-    ChatState();
+  const {
+    selectedChat,
+    setSelectedChat,
+    user,
+    notification,
+    setNotification,
+    darkmode,
+  } = ChatState();
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -110,7 +118,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   };
 
   useEffect(() => {
-    socket = io(ENDPOINT);
+    socket = io(process.env.ENDPOINT);
     socket.emit("setup", user);
     socket.on("join chat", () => setFetchAgain(!fetchAgain));
     const cleanup = () => {
@@ -256,10 +264,14 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                     </PersonalProfileModal>
                   </Box>
                   <Box flex="1" ml={4}>
-                    <Text fontSize="lg" fontWeight="bold">
+                    <Text
+                      fontSize="lg"
+                      fontWeight="bold"
+                      color={darkmode ? "white" : "gray.500"}
+                    >
                       {getSender(user, selectedChat.users)}
                     </Text>
-                    <Text fontSize="sm" color="gray.500">
+                    <Text fontSize="sm" color={darkmode ? "white" : "gray.500"}>
                       {getSenderFull(user, selectedChat.users).isActive
                         ? "Online"
                         : formatLastSeen(
@@ -270,7 +282,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 </Flex>
               ) : (
                 <>
-                  {selectedChat.chatName.toUpperCase()}
+                  <Text color={darkmode ? "white" : "gray.500"}>
+                    {selectedChat.chatName.toUpperCase()}
+                  </Text>
                   <UpdateGroupChatModal
                     fetchMessages={fetchMessages}
                     fetchAgain={fetchAgain}
@@ -284,11 +298,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             flexDir="column"
             justifyContent="flex-end"
             p={3}
-            bg="#E8E8E8"
             w="100%"
             h="100%"
             borderRadius="lg"
             overflowY="hidden"
+            backgroundImage={darkmode ? Darkbackgroundimage : backgroundImage}
+            backgroundRepeat={"no-repeat"}
+            backgroundSize={"cover"}
           >
             {loading ? (
               <Spinner
@@ -354,7 +370,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           alignItems="center"
           justifyContent="center"
           flex="1"
-          bgGradient="linear-gradient(to right, white,#e8e8e8 )"
+          bgGradient={
+            darkmode
+              ? "linear-gradient(to right, #000000, #333333)" // Dark mode gradient
+              : "linear-gradient(to right, white, #e8e8e8)"
+          }
           width={"100%"}
           borderRadius={"2xl"}
         >
@@ -385,7 +405,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             >
               Let's Connect and Chat!
             </Text>
-            <Text fontSize="lg" color="#363232" fontWeight={"thin"}>
+            <Text
+              fontSize="lg"
+              color={darkmode ? theme?.darkColor : theme?.lightColor}
+              fontWeight={"thin"}
+            >
               Click on a user 👈 to Explore the world🌐 of conversations! 💬
             </Text>
           </Box>

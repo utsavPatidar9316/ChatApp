@@ -85,8 +85,10 @@ export const formatLastSeen = (lastSeen) => {
   } else if (days === 1) {
     // Yesterday
     return "Yesterday";
-  } else if (hours >= 1) {
+  } else if (hours === 1) {
     // Today
+    return `${hours} hour ago`;
+  } else if (hours > 1) {
     return `${hours} hours ago`;
   } else if (minutes >= 1) {
     // Within the last hour

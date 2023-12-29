@@ -17,6 +17,8 @@ import {
 import { EditIcon } from "@chakra-ui/icons";
 import axios from "axios";
 import { useToast } from "@chakra-ui/toast";
+import { ChatState } from "../../Context/ChatProvider";
+import { theme } from "../../style";
 
 const ProfileModal = ({ user, children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -26,6 +28,7 @@ const ProfileModal = ({ user, children }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewURL, setPreviewURL] = useState(null);
   const [picLoading, setPicLoading] = useState(false);
+  const { darkmode } = ChatState();
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -137,6 +140,8 @@ const ProfileModal = ({ user, children }) => {
             alignItems="center"
             borderBottom="2px solid #ccc"
             pb={2}
+            bg={darkmode ? theme?.darkbackground : theme?.lightbackground}
+            color={darkmode ? theme?.lightBorder : theme?.lightColor}
           >
             Profile
             <IconButton
@@ -146,7 +151,10 @@ const ProfileModal = ({ user, children }) => {
               ml={2}
             />
           </ModalHeader>
-          <ModalBody>
+          <ModalBody
+            bg={darkmode ? theme?.darkbackground : theme?.lightbackground}
+            color={darkmode ? theme?.lightBorder : theme?.lightColor}
+          >
             <Input
               type="file"
               onChange={handleFileChange}
@@ -168,6 +176,7 @@ const ProfileModal = ({ user, children }) => {
                 position="absolute"
                 variant="solid"
                 right={140}
+                color={theme?.lightColor}
               />
             )}
             <Image
@@ -188,7 +197,7 @@ const ProfileModal = ({ user, children }) => {
                     onChange={handleNameChange}
                     variant="flushed"
                   />
-                  <Text fontSize="14px" color="gray.500" ml={2}>
+                  <Text fontSize="14px" ml={2}>
                     {editedName.length}
                   </Text>
                 </Flex>
@@ -201,7 +210,9 @@ const ProfileModal = ({ user, children }) => {
               your ChatApp.
             </Text>
           </ModalBody>
-          <ModalFooter>
+          <ModalFooter
+            bg={darkmode ? theme?.darkbackground : theme?.lightbackground}
+          >
             {isEditing && (
               <Button
                 colorScheme="teal"

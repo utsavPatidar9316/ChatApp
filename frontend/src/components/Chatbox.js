@@ -2,9 +2,10 @@ import { Box } from "@chakra-ui/layout";
 import "./styles.css";
 import SingleChat from "./SingleChat";
 import { ChatState } from "../Context/ChatProvider";
+import { theme } from "../../src/style";
 
 const Chatbox = ({ fetchAgain, setFetchAgain }) => {
-  const { selectedChat } = ChatState();
+  const { selectedChat, darkmode } = ChatState();
 
   return (
     <Box
@@ -12,7 +13,7 @@ const Chatbox = ({ fetchAgain, setFetchAgain }) => {
       alignItems="center"
       flexDir="column"
       p={3}
-      bg="white"
+      bg={darkmode ? theme.darkbackground : theme.lightbackground}
       w={{ base: "100%", md: "68%" }}
       borderRadius="lg"
       borderWidth="1px"

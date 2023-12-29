@@ -12,8 +12,9 @@ import {
 import { ChatState } from "../Context/ChatProvider";
 import { Image, Box, Text, Flex } from "@chakra-ui/react";
 import PersonalProfileModal from "./PersonalProfile";
+import { theme } from "../style";
 const ScrollableChat = ({ messages }) => {
-  const { user } = ChatState();
+  const { user, darkmode } = ChatState();
 
   return (
     <ScrollableFeed style={{ overflowY: "auto", height: "400px" }}>
@@ -30,7 +31,7 @@ const ScrollableChat = ({ messages }) => {
                     style={{
                       display: "block",
                       textAlign: "center",
-                      color: "gray",
+                      color: darkmode ? theme?.darkColor : theme?.lightColor,
                       fontSize: "10px",
                       margin: "10px 0",
                     }}
@@ -80,7 +81,11 @@ const ScrollableChat = ({ messages }) => {
                     >
                       {m.content}
                     </span>
-                    <Text fontSize="xs" color="gray.500" alignSelf={"flex-end"}>
+                    <Text
+                      fontSize="xs"
+                      color={darkmode ? theme?.lightBorder : theme?.lightColor}
+                      alignSelf={"flex-end"}
+                    >
                       {ampmTime(m.createdAt)}
                     </Text>
                   </>
@@ -115,7 +120,11 @@ const ScrollableChat = ({ messages }) => {
                         />
                       </PersonalProfileModal>
                     </span>
-                    <Text fontSize="xs" color="gray.500" alignSelf={"flex-end"}>
+                    <Text
+                      fontSize="xs"
+                      color={darkmode ? theme?.lightBorder : theme?.lightColor}
+                      alignSelf={"flex-end"}
+                    >
                       {ampmTime(m.createdAt)}
                     </Text>
                   </>
@@ -127,7 +136,11 @@ const ScrollableChat = ({ messages }) => {
       ) : (
         <Box
           p={"40"}
-          bgGradient="linear-gradient(to right, white,#e8e8e8 )"
+          bgGradient={
+            darkmode
+              ? "linear-gradient(to right, #000000, #333333)" // Dark mode gradient
+              : "linear-gradient(to right, white, #e8e8e8)"
+          }
           borderRadius="md"
           boxShadow="md"
           color="gray"

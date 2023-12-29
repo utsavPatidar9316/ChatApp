@@ -9,7 +9,8 @@ import {
   ModalBody,
   Image,
 } from "@chakra-ui/react";
-
+import { ChatState } from "../Context/ChatProvider";
+import { theme } from "../style";
 const ImagePreviewModel = ({
   isOpen,
   onClose,
@@ -19,6 +20,7 @@ const ImagePreviewModel = ({
   sendImage,
   loading,
 }) => {
+  const { darkmode } = ChatState();
   const handleClose = () => {
     setSelectedImage(null); // Set selectedImage to null
     onClose(); // Close the modal
@@ -31,10 +33,19 @@ const ImagePreviewModel = ({
     <Modal isOpen={isOpen} onClose={onClose} onOverlayClick={handleClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader textAlign="center" fontSize="2xl">
+        <ModalHeader
+          textAlign="center"
+          fontSize="2xl"
+          bg={darkmode ? theme?.darkbackground : theme?.lightbackground}
+          color={darkmode ? theme?.lightBorder : theme?.lightColor}
+        >
           Preview Image
         </ModalHeader>
-        <ModalBody justifyContent="center">
+        <ModalBody
+          justifyContent="center"
+          bg={darkmode ? theme?.darkbackground : theme?.lightbackground}
+          color={darkmode ? theme?.lightBorder : theme?.lightColor}
+        >
           {selectedImage && (
             <Image
               src={URL.createObjectURL(selectedImage)}
@@ -45,7 +56,10 @@ const ImagePreviewModel = ({
             />
           )}
         </ModalBody>
-        <ModalFooter justifyContent="center">
+        <ModalFooter
+          justifyContent="center"
+          bg={darkmode ? theme?.darkbackground : theme?.lightbackground}
+        >
           <Button
             colorScheme="blue"
             mr={3}

@@ -2,8 +2,11 @@ import { Stack } from "@chakra-ui/layout";
 import { Skeleton } from "@chakra-ui/skeleton";
 import { useEffect, useState } from "react";
 import { Box, Image, Text, Flex } from "@chakra-ui/react";
+import { ChatState } from "../Context/ChatProvider";
+import { theme } from "../style";
 const ChatLoading = () => {
   const [showLoading, setShowLoading] = useState(true);
+  const { darkmode } = ChatState();
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowLoading(false);
@@ -26,7 +29,11 @@ const ChatLoading = () => {
           alignItems="center"
           justifyContent="center"
           flex="1"
-          bgGradient="linear-gradient(to right, white,#e8e8e8 )"
+          bgGradient={
+            darkmode
+              ? "linear-gradient(to right, #000000, #333333)" // Dark mode gradient
+              : "linear-gradient(to right, white, #e8e8e8)"
+          }
           width={"100%"}
           borderRadius={"2xl"}
         >
@@ -57,7 +64,11 @@ const ChatLoading = () => {
             >
               Start Chatting Privately with Your Contact List
             </Text>
-            <Text fontSize="lg" color="#363232" fontWeight={"thin"}>
+            <Text
+              fontSize="lg"
+              color={darkmode ? theme?.lightBorder : theme?.lightColor}
+              fontWeight={"thin"}
+            >
               Connect with friends and have private conversations in ChatApp.
               Start a chat now!
             </Text>

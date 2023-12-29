@@ -18,7 +18,7 @@ import {
   DrawerOverlay,
 } from "@chakra-ui/modal";
 import { Tooltip } from "@chakra-ui/tooltip";
-import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import { BellIcon, ChevronDownIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { Avatar } from "@chakra-ui/avatar";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -32,7 +32,7 @@ import { Effect } from "react-notification-badge";
 import { getSender } from "../../config/ChatLogics";
 import UserListItem from "../userAvatar/UserListItem";
 import { ChatState } from "../../Context/ChatProvider";
-
+import { theme } from "../../style";
 function SideDrawer() {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -46,6 +46,8 @@ function SideDrawer() {
     setNotification,
     chats,
     setChats,
+    darkmode,
+    setDarkmode,
   } = ChatState();
 
   const toast = useToast();
@@ -133,20 +135,28 @@ function SideDrawer() {
       });
     }
   };
-
+  const darkModeChangeFunction = () => {
+    setDarkmode(!darkmode);
+  };
   return (
     <>
       <Box
         d="flex"
         justifyContent="space-between"
         alignItems="center"
-        bg="white"
+        bg={darkmode ? theme.darkbackground : theme.lightbackground}
+        borderColor={darkmode ? theme.darkBorder : theme.lightBorder}
         w="100%"
         p="5px 10px 5px 10px"
         borderWidth="5px"
       >
         <Tooltip label="Search Users to chat" hasArrow placement="bottom-end">
-          <Button variant="ghost" onClick={onOpen} id="searchUser">
+          <Button
+            variant="ghost"
+            onClick={onOpen}
+            id="searchUser"
+            color={darkmode ? theme?.darkColor : theme?.lightColor}
+          >
             <i className="fas fa-search"></i>
             <Text d={{ base: "none", md: "flex" }} px={4}>
               Search User
@@ -167,18 +177,34 @@ function SideDrawer() {
             </Text>
           </HStack>
         </div>
-        <div>
+        <div style={{ color: darkmode ? theme?.darkColor : theme?.lightColor }}>
           <Menu>
-            <div id="notification" style={{ display: "inline" }}>
-              <MenuButton p={1}>
-                <NotificationBadge
-                  count={notification.length}
-                  effect={Effect.SCALE}
-                />
-                <BellIcon fontSize="2xl" m={1} />
-              </MenuButton>
+            <div
+              id="notification"
+              style={{
+                display: "inline",
+              }}
+            >
+              <Tooltip
+                label="Click to show Notification"
+                hasArrow
+                placement="bottom"
+              >
+                <MenuButton p={1}>
+                  <NotificationBadge
+                    count={notification.length}
+                    effect={Effect.SCALE}
+                  />
+                  <BellIcon fontSize="2xl" m={1} />
+                </MenuButton>
+              </Tooltip>
             </div>
-            <MenuList pl={2}>
+            <MenuList
+              pl={2}
+              backgroundColor={
+                darkmode ? theme?.darkbackground : theme?.lightbackground
+              }
+            >
               {!notification.length && "No New Messages"}
               {notification.map((notif) => (
                 <MenuItem
@@ -195,6 +221,22 @@ function SideDrawer() {
               ))}
             </MenuList>
           </Menu>
+          <Tooltip
+            label={`Click to enable ${darkmode ? "Light Mode" : "Dark Mode"}`}
+            hasArrow
+            placement="bottom"
+          >
+            <span
+              onClick={darkModeChangeFunction}
+              style={{ cursor: "pointer" }}
+            >
+              {darkmode ? (
+                <MoonIcon fontSize="xl" m={1} />
+              ) : (
+                <SunIcon fontSize="xl" m={1} />
+              )}
+            </span>
+          </Tooltip>
           <Menu>
             <div id="profileDrive" style={{ display: "inline" }}>
               <MenuButton
@@ -210,7 +252,11 @@ function SideDrawer() {
                 />
               </MenuButton>
             </div>
-            <MenuList>
+            <MenuList
+              backgroundColor={
+                darkmode ? theme?.darkbackground : theme?.lightbackground
+              }
+            >
               <ProfileModal user={user}>
                 <MenuItem>My Profile</MenuItem>{" "}
               </ProfileModal>
@@ -220,20 +266,27 @@ function SideDrawer() {
           </Menu>
         </div>
       </Box>
-
       <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />
-        <DrawerContent>
+        <DrawerContent
+          color={darkmode ? theme?.darkColor : theme?.lightColor}
+          backgroundColor={
+            darkmode ? theme?.darkbackground : theme?.lightbackground
+          }
+        >
           <DrawerHeader borderBottomWidth="1px">Search Users</DrawerHeader>
           <DrawerBody>
             <Box d="flex" pb={2}>
               <Input
+                textColor={darkmode ? theme?.darkColor : theme?.lightColor}
                 placeholder="Search by name or email"
+                _placeholder={{
+                  color: darkmode ? theme?.darkColor : theme?.lightColor,
+                }}
                 mr={2}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
-              {/* <Button onClick={handleSearch}>Go</Button> */}
             </Box>
             {loading ? (
               <ChatLoading />

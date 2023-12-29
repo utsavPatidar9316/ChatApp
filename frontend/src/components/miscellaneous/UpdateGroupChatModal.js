@@ -21,6 +21,7 @@ import { useState } from "react";
 import { ChatState } from "../../Context/ChatProvider";
 import UserBadgeItem from "../userAvatar/UserBadgeItem";
 import UserListItem from "../userAvatar/UserListItem";
+import { theme } from "../../style";
 
 const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -30,8 +31,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
   const [loading, setLoading] = useState(false);
   const [renameloading, setRenameLoading] = useState(false);
   const toast = useToast();
-
-  const { selectedChat, setSelectedChat, user } = ChatState();
+  const { selectedChat, setSelectedChat, user, darkmode } = ChatState();
 
   const handleSearch = async (query) => {
     setSearch(query);
@@ -212,12 +212,21 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
             fontFamily="Work sans"
             d="flex"
             justifyContent="center"
+            bg={darkmode ? theme?.darkbackground : theme?.lightbackground}
+            color={darkmode ? theme?.lightBorder : theme?.lightColor}
           >
             {selectedChat.chatName}
           </ModalHeader>
-
-          <ModalCloseButton />
-          <ModalBody d="flex" flexDir="column" alignItems="center">
+          <ModalCloseButton
+            color={darkmode ? theme?.lightBorder : theme?.lightColor}
+          />
+          <ModalBody
+            d="flex"
+            flexDir="column"
+            alignItems="center"
+            bg={darkmode ? theme?.darkbackground : theme?.lightbackground}
+            color={darkmode ? theme?.lightBorder : theme?.lightColor}
+          >
             <Box w="100%" d="flex" flexWrap="wrap" pb={3}>
               {selectedChat.users.map((u) => (
                 <UserBadgeItem
@@ -265,7 +274,9 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
               ))
             )}
           </ModalBody>
-          <ModalFooter>
+          <ModalFooter
+            bg={darkmode ? theme?.darkbackground : theme?.lightbackground}
+          >
             <Button onClick={() => handleRemove(user)} colorScheme="red">
               Leave Group
             </Button>
